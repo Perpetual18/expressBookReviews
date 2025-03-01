@@ -3,17 +3,35 @@ let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
+const axios = require('axios').default;
 
-
-public_users.post("/register", (req,res) => {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+public_users.post("/register", (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+  
+    if (!username || !password) {
+      return res.send("username and/or password are not provided");
+    }
+      const user = users.find((user) => user.username === username);
+  
+    if (user) {
+      return res.send("user already exists");
+    }
+  
+    const registeredUser = {
+      username: req.body.username,
+      password: req.body.password,
+    };
+  
+    users.push(registeredUser);
+  
+    return res.json(users);
 });
 
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
-  res.send(JSON.stringify({books}, null, 4));
-  });
+    res.send(JSON.stringify({books}, null, 4));
+    });
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
@@ -45,4 +63,54 @@ public_users.get('/review/:isbn',function (req, res) {
   res.send({Reviews: books[ISBN].reviews})
 });
 
+
+//
+//task 10
+public_users.get("/axios", async (req, res) => {
+    try {
+      const response = await axios.get("http://localhost:5000/booklist");
+      res.send(JSON.stringify(response.data));
+    } catch {
+      res.send.json({ message: 'Error' });
+    }
+  });
+
+  
+//task 11
+public_users.get("/axios/isbn/:isbn", async (req, res) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/isbn/${req.params.isbn}`
+      );
+      res.send(JSON.stringify(response.data));
+    } catch {
+      res.send.json({ message: 'Error' });
+    }
+  });
+  
+//task 12
+public_users.get("/axios/author/:author", async (req, res) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/author/${req.params.author}`
+      );
+      res.send(JSON.stringify(response.data));
+    } catch {
+      res.send.json({ message: 'Error' });
+    }
+  });
+  
+//task 13
+public_users.get("/axios/title/:title", (req, res) => {
+    const response = axios
+      .get(`http://localhost:5000/title/${req.params.title}`)
+      .then((response) => {
+        res.send(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+        res.send.json({ message: 'Error' });
+      });
+  });
+  
 module.exports.general = public_users;
