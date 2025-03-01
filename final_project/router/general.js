@@ -66,7 +66,7 @@ public_users.get('/review/:isbn',function (req, res) {
 
 //
 //task 10
-public_users.get("/axios", async (req, res) => {
+public_users.get("/", async (req, res) => {
     try {
       const response = await axios.get("http://localhost:5000/booklist");
       res.send(JSON.stringify(response.data));
@@ -77,7 +77,7 @@ public_users.get("/axios", async (req, res) => {
 
   
 //task 11
-public_users.get("/axios/isbn/:isbn", async (req, res) => {
+public_users.get("/isbn/:isbn", async (req, res) => {
     try {
       const response = await axios.get(
         `http://localhost:5000/isbn/${req.params.isbn}`
@@ -89,7 +89,7 @@ public_users.get("/axios/isbn/:isbn", async (req, res) => {
   });
   
 //task 12
-public_users.get("/axios/author/:author", async (req, res) => {
+public_users.get("/author/:author", async (req, res) => {
     try {
       const response = await axios.get(
         `http://localhost:5000/author/${req.params.author}`
@@ -101,7 +101,7 @@ public_users.get("/axios/author/:author", async (req, res) => {
   });
   
 //task 13
-public_users.get("/axios/title/:title", (req, res) => {
+public_users.get("/title/:title", (req, res) => {
     const response = axios
       .get(`http://localhost:5000/title/${req.params.title}`)
       .then((response) => {
